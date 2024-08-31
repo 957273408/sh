@@ -1,4 +1,5 @@
 <script setup lang="ts" name="info">
+     import eRunCalendar from "@/components/e-run-calendar/e-run-calendar.vue"
 import { useRouter, useRoute } from "vue-router";
 import { ref } from "vue";
 import { useCascaderAreaData } from "@vant/area-data";
@@ -7,6 +8,12 @@ const router = useRouter();
 const xb = ref("男");
 const lx = ref("箱子");
 const username = ref("");
+const selectOptionsArr = ref( [30, 0, 0, 0])
+const birthday = ref('')
+
+const selectDate = (e)=>{
+  birthday.value=e
+}
 
 const showGxPicker = ref(false);
 const gxValue = ref("");
@@ -65,7 +72,7 @@ const cascaderValue = ref("");
 const options = useCascaderAreaData();
 const onFinish = ({ selectedOptions }) => {
   show.value = false;
-  fieldValue.value = selectedOptions.map(option => option.text).join("/");
+  fieldValue.value = selectedOptions.map(option => option.text).join("");
 };
 </script>
 
@@ -138,7 +145,7 @@ const onFinish = ({ selectedOptions }) => {
           </van-field>
 
           <van-field
-            v-model="result"
+            v-model="birthday"
             is-link
             readonly
             name="calendar"
@@ -146,7 +153,11 @@ const onFinish = ({ selectedOptions }) => {
             placeholder="点击选择日期"
             @click="showCalendar = true"
           />
-          <van-popup v-model:show="showCalendar" round position="bottom">
+          <e-run-calendar ref="betterCalendarRef" :showCalendar="showCalendar" @confirm="selectDate" :isHourShow="true"
+                @cancel="()=>{
+                  showCalendar = false
+                }" :selectOptions="selectOptionsArr"></e-run-calendar>
+          <!-- <van-popup v-model:show="showCalendar" round position="bottom">
             <van-picker-group
               v-model:show="showCalendar"
               title="农历出生年/月/日/时"
@@ -161,7 +172,7 @@ const onFinish = ({ selectedOptions }) => {
               />
               <van-time-picker v-model="currentTime" />
             </van-picker-group>
-          </van-popup>
+          </van-popup> -->
 
           <van-field
             v-model="getName"
